@@ -29,7 +29,7 @@ function start() {
 			<label for="key">Your Jira API Key</label>
 			<input type="password" name="key" class="key">
 			<button class="save">Save</button> 
-			<div class="error"></div> 
+			<div class="error update"></div> 
 		</div> 
 		<div class="main" hidden=true> 
 			<div class="time_select"> 
