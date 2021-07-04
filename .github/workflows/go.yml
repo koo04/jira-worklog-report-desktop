@@ -1,13 +1,11 @@
-name: Go
+name: Build and Release
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+    - 'v*'
 
 jobs:
-
   build:
     runs-on: windows-latest
     steps:
@@ -32,3 +30,14 @@ jobs:
       
     - name: Build
       run: wails build -f
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: true
+        prerelease: false
