@@ -50,6 +50,7 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./build/jwrd.exe
         asset_name: jwrd-windows-amd64.exe
+        asset_content_type: vnd.microsoft.portable-executable
 
   build-mac:
     runs-on: macos-11
@@ -81,3 +82,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./build/jwrd
         asset_name: jwrd-mac-amd64
+        asset_content_type: applefile
