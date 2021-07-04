@@ -31,7 +31,7 @@ function start() {
 			<button class="save">Save</button> 
 			<div class="error"></div> 
 		</div> 
-		<div class="main"> 
+		<div class="main" hidden=true> 
 			<div class="time_select"> 
 				<select name="time"> 
 					<option value="0">Today</option>
