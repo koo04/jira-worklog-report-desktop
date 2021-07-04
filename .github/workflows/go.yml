@@ -53,7 +53,7 @@ jobs:
         asset_content_type: vnd.microsoft.portable-executable
 
   build-mac:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
 
