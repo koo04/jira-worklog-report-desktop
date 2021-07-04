@@ -8,6 +8,8 @@ on:
 jobs:
   build-win:
     runs-on: windows-latest
+    outputs:
+      url: ${{ steps.create_release.outputs.upload_url }}
     steps:
     - uses: actions/checkout@v2
 
@@ -80,7 +82,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        upload_url: ${{ jobs.build-win.steps.create_release.outputs.upload_url }}
+        upload_url: ${{ needs.build-win.outputs.url }}
         asset_path: ./build/jwrd
         asset_name: jwrd-mac-amd64
         asset_content_type: applefile
