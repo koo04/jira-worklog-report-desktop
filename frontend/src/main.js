@@ -8,7 +8,7 @@ function formatSeconds(seconds) {
 	seconds -= hours * 3600
 	var minutes = Math.floor(seconds / 60)
 	seconds -= minutes * 60
-	return (days != 0 ? days + " Days" : "") + (hours != 0 ? hours + " Hours" : "") + (minutes != 0 ? (minutes < 10 ? "0" + minutes + " Minutes" : minutes + " Minutes") : "")
+	return (days != 0 ? days + " Days " : "") + (hours != 0 ? hours + " Hours " : "") + (minutes != 0 ? (minutes < 10 ? "0" + minutes + " Minutes " : minutes + " Minutes ") : "")
 }
 
 function start() {
