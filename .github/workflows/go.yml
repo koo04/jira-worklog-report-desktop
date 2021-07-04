@@ -54,6 +54,7 @@ jobs:
 
   build-mac:
     runs-on: macos-latest
+    needs: build-win
     steps:
     - uses: actions/checkout@v2
 
@@ -79,7 +80,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ jobs.build-win.steps.create_release.outputs.upload_url }}
         asset_path: ./build/jwrd
         asset_name: jwrd-mac-amd64
         asset_content_type: applefile
