@@ -67,7 +67,7 @@ jobs:
 
   build-mac:
     runs-on: macos-latest
-    needs: build-win
+    needs: build-linux
     steps:
     - uses: actions/checkout@v2
 
