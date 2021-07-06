@@ -1,4 +1,8 @@
 # Changelog
+## [v0.0.1-alpha.03] - 2020-07-06
+### Updated
+- Updated config creation permissions for Macs
+---
 ## [v0.0.1-alpha.02] - 2020-07-05
 ### Added
 - A change log! Let's hope I can keep it up to date
