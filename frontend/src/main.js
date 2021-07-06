@@ -22,15 +22,15 @@ function start() {
 
 	app.innerHTML = `
 		<div class="login">
-			<label for="url">Company Jira URL</label>
-			<input type="url" name="url" class="url">
-			<label for="email">Your Email</label>
-			<input type="email" name="email" class="email">
-			<label for="key">Your Jira API Key</label>
-			<input type="password" name="key" class="key">
-			<button class="save">Save</button> 
-			<div class="error update"></div> 
-		</div> 
+			<div class="form">
+				<form class="login-form">
+					<input type="text" name="url" placeholder="Jira URL"/>
+					<input type="email" name="email" placeholder="Jira Email"/>
+					<input type="password" name="key" placeholder="API Key"/>
+					<button>login</button>
+				</form> 
+			</div> 
+		</div>
 		<div class="main" hidden=true> 
 			<div class="time_select"> 
 				<select name="time"> 
@@ -53,11 +53,10 @@ function start() {
 	
 
 	var loginEle = document.querySelector('.login')
-	var emailEle = document.querySelector('.login>.email')
-	var keyEle = document.querySelector('.login>.key')
-	var urlEle = document.querySelector('.login>.url')
-	var saveBtn = document.querySelector('.login>.save')
-	var errEle = document.querySelector('.login>.error')
+	var loginFormEle = document.querySelector('.login-form')
+	var emailEle = document.querySelector('input[name="email"]')
+	var keyEle = document.querySelector('input[name="key"]')
+	var urlEle = document.querySelector('input[name="url"]')
 	
 	var mainEle = document.querySelector('.main')
 	var timeSelection = document.querySelector('.time_select>select')
@@ -105,7 +104,8 @@ function start() {
 		refreshBtn.removeAttribute('disabled')
 	})
 
-	saveBtn.addEventListener('click', function() {
+	loginFormEle.addEventListener('submit', function(e) {
+		e.preventDefault()
 		if (urlEle.value == "" || emailEle == "" || keyEle == "") {
 			errEle.innerHTML = "All fields must be filled and valid"
 		} else {

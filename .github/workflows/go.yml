@@ -6,10 +6,38 @@ on:
     - 'v*'
 
 jobs:
-  build-win:
-    runs-on: windows-latest
+  build-linux:
+    runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get Changelog
+      id: get_changelog
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+        architecture: 'x64'
+    - run: |
+      output=$(python extract.py ${{ github.ref }})
+      echo "::set-output name=changelog::$output"
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: ${{ steps.get_changelog.outputs.changelog }}
+        draft: true
+        prerelease: false
+
+  build-win:
+    runs-on: windows-latest
+    needs: build-linux
     steps:
     - uses: actions/checkout@v2
 
@@ -33,23 +61,12 @@ jobs:
     - name: Build
       run: wails build -f
 
-    - name: Create Release
-      uses: actions/create-release@v1
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: true
-        prerelease: false
-
     - name: upload artifacts
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ needs.build-linux.outputs.url }}
         asset_path: ./build/jwrd.exe
         asset_name: jwrd-windows-amd64.exe
         asset_content_type: vnd.microsoft.portable-executable
@@ -82,7 +99,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        upload_url: ${{ needs.build-win.outputs.url }}
+        upload_url: ${{ needs.build-linux.outputs.url }}
         asset_path: ./build/jwrd
         asset_name: jwrd-mac-amd64
         asset_content_type: applefile
