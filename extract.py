@@ -3,7 +3,6 @@ import sys
 
 f = open("./CHANGELOG.md", "r")
 i = f.read()
-print(sys.argv[1].split('/')[2])
 start_expression = r"## \[" + sys.argv[1].split('/')[2] + r"\].+?(?=\n)"
 end_expression = r"---"
 start = re.search(start_expression, i)
