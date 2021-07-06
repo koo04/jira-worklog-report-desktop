@@ -12,16 +12,10 @@ jobs:
       url: ${{ steps.create_release.outputs.upload_url }}
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-
-    - name: Get Changelog
-      id: get_changelog
-      with:
-        python-version: '3.x'
-        architecture: 'x64'
-      run: |
+    - run: |
         output=$(python extract.py ${{ github.ref }})
         echo "::set-output name=changelog::$output"
+      id: get_changelog
 
     - name: Create Release
       uses: actions/create-release@v1
