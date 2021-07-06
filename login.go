@@ -37,7 +37,7 @@ func (l *Login) WailsInit(runtime *wails.Runtime) error {
 	configFile = fmt.Sprintf("%s/config.json", configDir)
 
 	if _, err := os.Stat(configDir); os.IsNotExist(err) {
-		err := os.Mkdir(configDir, 0666)
+		err := os.Mkdir(configDir, 0755)
 		if err != nil {
 			return err
 		}
@@ -60,7 +60,7 @@ func (l *Login) WailsInit(runtime *wails.Runtime) error {
 }
 
 func (l *Login) Save(user string) error {
-	file, err := os.OpenFile(configFile, os.O_RDWR, 0666)
+	file, err := os.OpenFile(configFile, os.O_RDWR, 0755)
 	if err != nil {
 		l.Log.Errorf("Error getting config file: %v", err)
 		newFile, err := os.Create(configFile)
