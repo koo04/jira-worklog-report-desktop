@@ -19,9 +19,9 @@ jobs:
       with:
         python-version: '3.x'
         architecture: 'x64'
-    - run: |
-      output=$(python extract.py ${{ github.ref }})
-      echo "::set-output name=changelog::$output"
+      run: |
+        output=$(python extract.py ${{ github.ref }})
+        echo "::set-output name=changelog::$output"
 
     - name: Create Release
       uses: actions/create-release@v1
