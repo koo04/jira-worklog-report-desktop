@@ -12,7 +12,7 @@ end = re.search(end_expression, i)
 print(start,end)
 
 if start != None and end != None:
-    print(i[start.end()+1:end.start()-1].replace('\n', '\\\\$\n'))
+    print(i[start.end()+1:end.start()-1])
 else:
     print("FAILED TO GET THE CHANGELOG")
     exit(1)
