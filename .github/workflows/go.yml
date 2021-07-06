@@ -14,6 +14,9 @@ jobs:
     - uses: actions/checkout@v2
     - run: |
         output=$(python extract.py ${{ github.ref }})
+        output="${output//'%'/'%25'}"
+        output="${output//$'\n'/'%0A'}"
+        output="${output//$'\r'/'%0D'}"
         echo "::set-output name=changelog::$output"
       id: get_changelog
 
@@ -25,7 +28,8 @@ jobs:
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
-        body: ${{ steps.get_changelog.outputs.changelog }}
+        body: |
+          ${{ steps.get_changelog.outputs.changelog }}
         draft: true
         prerelease: false
 
