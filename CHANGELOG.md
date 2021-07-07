@@ -1,4 +1,12 @@
 # Changelog
+## [v0.0.1-alpha.04] - 2020-07-07
+### Updated
+- Tickets to be much prettier
+- No more refresh button
+- Color matched the login button to the sidebar
+### Fixed
+- Parent ticket ID being the ID rather than the Key
+---
 ## [v0.0.1-alpha.03] - 2020-07-06
 ### Updated
 - Updated config creation permissions for Macs

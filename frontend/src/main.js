@@ -32,26 +32,25 @@ function start() {
 			</div> 
 		</div>
 		<div class="main" hidden=true> 
-			<div class="time_select"> 
-				<select name="time"> 
-					<option value="0">Today</option>
-					<option value="1">This Week</option>
-					<option value="2">Last Week</option>
-					<option value="3">This Month</option>
-					<option value="4">Last Month</option>
-					<option value="5">This Quarter</option>
-					<option value="6">Last Quarter</option>
-				</select>
+			<div class="set-time">
+				<div class="set" data-value=0>Today</div>
+				<div class="set" data-value=1>This Week</div>
+				<div class="set" data-value=2>Last Week</div>
+				<div class="set" data-value=3>This Month</div>
+				<div class="set" data-value=4>Last Month</div>
+				<div class="set" data-value=5>This Quarter</div>
+				<div class="set" data-value=6>Last Quarter</div>
 			</div>
-			<div><button class="refresh">Refresh</button></div>
-			<div class="total_time">Total Time: <span>0</span></div>
+			<div class="header">
+				<div class="total-time">
+					Total Time: <span>0</span>
+				</div>
+				<hr>
+			</div>
 			<div class="tickets">
-				<div class="title">List of tickets</div>
-				<div class="list"></div>
 			</div>
 		</div>`
 	
-
 	var loginEle = document.querySelector('.login')
 	var loginFormEle = document.querySelector('.login-form')
 	var emailEle = document.querySelector('input[name="email"]')
@@ -59,10 +58,9 @@ function start() {
 	var urlEle = document.querySelector('input[name="url"]')
 	
 	var mainEle = document.querySelector('.main')
-	var timeSelection = document.querySelector('.time_select>select')
-	var totalTimeEle = document.querySelector('.total_time>span')
-	var ticketsEle = document.querySelector('.tickets>.list')
-	var refreshBtn = document.querySelector('.refresh')
+	var selectTimeEle = document.querySelectorAll('.main > .set-time > .set')
+	var totalTimeEle = document.querySelector('.main > .header > .total-time > span')
+	var ticketsEle = document.querySelector('.main > .tickets')
 
 	backend.Login.GetUserInfo().then(function(u) {
 		user = JSON.parse(u)
@@ -79,29 +77,26 @@ function start() {
 	ticketsStore.subscribe(function(state) {
 		var totalWorkTime = 0
 
+		ticketsEle.innerHTML = ""
+
 		if (state.length > 0) {
 
 			state.forEach(function(ticket) {
 				totalWorkTime += ticket.work_time
 				totalTimeEle.textContent = formatSeconds(totalWorkTime)
 
-				console.log(ticket.parent)
-
 				ticketsEle.innerHTML += ' \
-					<hr> \
-					<div id="' + ticket.id + '"> \
-						<div class="id"><a href="' + ticket.link + '" target="_blank">ID: ' + ticket.id + '</a></div> \
-						' + (ticket.parent.id != "" ? '<div class="parent"><a href="' + ticket.parent.link + ' target="_blank"> Parent: ' + ticket.parent.id + '</a></div>' : '') + ' \
+					<div id="' + ticket.id + '" class="ticket"> \
+						<div class="id"><span href="' + ticket.link + '" target="_blank">ID: ' + ticket.id + '</span></div> \
+						' + (ticket.parent.id != "" ? '<div class="parent"><span href="' + ticket.parent.link + ' target="_blank"> Parent: ' + ticket.parent.id + '</span></div>' : '') + ' \
 						<div class="name">Ticket Title: ' + ticket.name + '</div> \
 						<div class="time">Ticket Work Time: ' + formatSeconds(ticket.work_time) + '</div> \
-					</div>'
+					</div>\
+					<hr>'
 			})
 		} else {
 			ticketsEle.innerHTML += "<hr><div>You don't have any logged hours!</div>"
 		}
-
-		refreshBtn.textContent = "Refresh"
-		refreshBtn.removeAttribute('disabled')
 	})
 
 	loginFormEle.addEventListener('submit', function(e) {
@@ -122,17 +117,13 @@ function start() {
 		}
 	})
 
-	refreshBtn.addEventListener('click', function() {
-		totalTimeEle.innerHTML = ''
-		ticketsEle.innerHTML = ''
-
-		refreshBtn.textContent = "Refreshing..."
-		refreshBtn.setAttribute('disabled', true)
-
-		backend.Tickets.GetTickets(parseInt(timeSelection.value)).then(function(err) {
-			if (err != null) {
-				console.log(err)
-			}
+	selectTimeEle.forEach(function(e) {
+		e.addEventListener('click', function(e) {
+			backend.Tickets.GetTickets(parseInt(e.target.dataset.value)).then(function(err){
+				if (err) {
+					console.log(err)
+				}
+			})
 		})
 	})
 }

@@ -69,7 +69,6 @@ func (t *Tickets) GetTickets(timeSet int) error {
 	t.Log.Debugf("%v")
 
 	jql := ""
-	// now := time.Date(2021, 1, 1, 0, 0, 0, 0, time.Local)
 	now := time.Now()
 	y, m, _ := now.Date()
 
@@ -131,7 +130,7 @@ func (t *Tickets) GetTickets(timeSet int) error {
 						Link:     fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Key),
 						WorkTime: totalTime,
 						Parent: Parent{
-							Id:   i.Fields.Parent.ID,
+							Id:   i.Fields.Parent.Key,
 							Link: fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Fields.Parent.Key),
 						},
 					})
