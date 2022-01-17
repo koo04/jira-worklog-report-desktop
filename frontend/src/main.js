@@ -31,6 +31,7 @@ function start() {
 				</form> 
 			</div> 
 		</div>
+		<div class="loading lds-ring" hidden="true"><div></div><div></div><div></div><div></div></div>
 		<div class="main" hidden=true> 
 			<div class="set-time">
 				<div class="set" data-value=0>Today</div>
@@ -61,6 +62,8 @@ function start() {
 	var selectTimeEle = document.querySelectorAll('.main > .set-time > .set')
 	var totalTimeEle = document.querySelector('.main > .header > .total-time > span')
 	var ticketsEle = document.querySelector('.main > .tickets')
+
+	var loaderEle = document.querySelector('.loading')
 
 	backend.Login.GetUserInfo().then(function(u) {
 		user = JSON.parse(u)
@@ -119,10 +122,16 @@ function start() {
 
 	selectTimeEle.forEach(function(e) {
 		e.addEventListener('click', function(e) {
+			loaderEle.removeAttribute('hidden')
+			ticketsEle.setAttribute('hidden', true)
+
 			backend.Tickets.GetTickets(parseInt(e.target.dataset.value)).then(function(err){
 				if (err) {
 					console.log(err)
 				}
+
+				ticketsEle.removeAttribute('hidden')
+				loaderEle.setAttribute('hidden', true)
 			})
 		})
 	})
