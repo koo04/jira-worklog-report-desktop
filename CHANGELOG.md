@@ -1,4 +1,7 @@
 # Changelog
+## [v0.0.1-alpha.05] - 2022-01-17
+### Added
+- Loading indicator when fetching tickets
 ## [v0.0.1-alpha.04] - 2020-07-07
 ### Updated
 - Tickets to be much prettier
