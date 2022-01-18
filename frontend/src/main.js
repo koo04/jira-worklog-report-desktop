@@ -155,17 +155,6 @@ function start() {
 				if(state.length-1 > index) {
 					ticketsEle.insertAdjacentHTML('beforeend', `<hr/>`)
 				}
-
-
-				// ticketsEle.innerHTML += ' \
-				// 	<div id="' + ticket.id + '" class="ticket" onclick=""> \
-				// 		<span class="copied" hidden="true">Link copied!</span> \
-				// 		<div class="id"><span href="' + ticket.link + '" target="_blank">ID: ' + ticket.id + '</span></div> \
-				// 		' + (ticket.parent.id != "" ? '<div class="parent"><span href="' + ticket.parent.link + ' target="_blank"> Parent: ' + ticket.parent.id + '</span></div>' : '') + ' \
-				// 		<div class="name">Ticket Title: ' + ticket.name + '</div> \
-				// 		<div class="time">Ticket Work Time: ' + formatSeconds(ticket.work_time) + '</div> \
-				// 	</div> \
-				// 	<hr>'
 			})
 		} else {
 			ticketsEle.innerHTML += "<hr><div>You don't have any logged hours!</div>"
