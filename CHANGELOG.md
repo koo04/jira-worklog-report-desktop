@@ -1,4 +1,8 @@
 # Changelog
+## [v0.0.1-alpha.08] - 2022-01-18
+### Fixed
+- `Copied Link` text foating in the wrong position after scrolling
+---
 ## [v0.0.1-alpha.07] - 2022-01-18
 ### Fixed
 - Ability to copy a ticket's link is now working

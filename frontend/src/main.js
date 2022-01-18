@@ -151,7 +151,7 @@ function start() {
 				})
 
 				ticketEle.addEventListener('mousemove', function(e) {
-					copiedSpanEle.style.top = (e.clientY + 5) + 'px'
+					copiedSpanEle.style.top = (window.scrollY + e.clientY + 5) + 'px'
 					copiedSpanEle.style.left = (e.clientX + 15) + 'px'
 				})
 
