@@ -2,9 +2,11 @@
 ## [v0.0.1-alpha.06] - 2022-01-18
 ### Added
 - Ability to copy a ticket's link on click
+---
 ## [v0.0.1-alpha.05] - 2022-01-17
 ### Added
 - Loading indicator when fetching tickets
+---
 ## [v0.0.1-alpha.04] - 2021-07-07
 ### Updated
 - Tickets to be much prettier
