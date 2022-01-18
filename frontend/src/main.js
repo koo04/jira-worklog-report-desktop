@@ -141,8 +141,13 @@ function start() {
 				ticketEle.appendChild(copiedSpanEle)
 
 				ticketEle.addEventListener('click', function() {
-					fadeOut(copiedSpanEle)
-					window.navigator.clipboard.writeText(ticket.link)
+					backend.copyURL(ticket.link).then(function(err){
+						if (err) {
+							console.log(err)
+							return
+						}
+						fadeOut(copiedSpanEle)
+					})
 				})
 
 				ticketEle.addEventListener('mousemove', function(e) {

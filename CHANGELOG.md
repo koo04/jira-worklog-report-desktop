@@ -1,4 +1,10 @@
 # Changelog
+## [v0.0.1-alpha.07] - 2022-01-18
+### Fixed
+- Ability to copy a ticket's link is now working
+### Updated
+- Wails backend to 1.16.9
+---
 ## [v0.0.1-alpha.06] - 2022-01-18
 ### Added
 - Ability to copy a ticket's link on click

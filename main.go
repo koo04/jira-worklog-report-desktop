@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 
+	"github.com/atotto/clipboard"
 	"github.com/wailsapp/wails"
 )
 
@@ -11,6 +12,15 @@ var js string
 
 //go:embed frontend/build/main.css
 var css string
+
+func copyURL(url string) error {
+	err := clipboard.WriteAll(url)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func main() {
 
@@ -24,5 +34,6 @@ func main() {
 	})
 	app.Bind(&Login{})
 	app.Bind(&Tickets{})
+	app.Bind(copyURL)
 	app.Run()
 }
