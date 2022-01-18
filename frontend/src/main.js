@@ -11,6 +11,18 @@ function formatSeconds(seconds) {
 	return (days != 0 ? days + " Days " : "") + (hours != 0 ? hours + " Hours " : "") + (minutes != 0 ? (minutes < 10 ? "0" + minutes + " Minutes " : minutes + " Minutes ") : "")
 }
 
+function fadeOut(ele) {
+	ele.removeAttribute('hidden')
+	ele.style.opacity = 1
+	var interval = setInterval(function() {
+		ele.style.opacity -= 0.1
+		if (ele.style.opacity <= 0) {
+			ele.style.opacity = 0
+			clearInterval(interval)
+		}
+	}, 100)
+}
+
 function start() {
 	var ticketsStore = runtime.Store.New('Tickets')
 	var app = document.getElementById('app')
@@ -83,19 +95,77 @@ function start() {
 		ticketsEle.innerHTML = ""
 
 		if (state.length > 0) {
-
-			state.forEach(function(ticket) {
+			state.forEach(function(ticket, index) {
 				totalWorkTime += ticket.work_time
 				totalTimeEle.textContent = formatSeconds(totalWorkTime)
 
-				ticketsEle.innerHTML += ' \
-					<div id="' + ticket.id + '" class="ticket"> \
-						<div class="id"><span href="' + ticket.link + '" target="_blank">ID: ' + ticket.id + '</span></div> \
-						' + (ticket.parent.id != "" ? '<div class="parent"><span href="' + ticket.parent.link + ' target="_blank"> Parent: ' + ticket.parent.id + '</span></div>' : '') + ' \
-						<div class="name">Ticket Title: ' + ticket.name + '</div> \
-						<div class="time">Ticket Work Time: ' + formatSeconds(ticket.work_time) + '</div> \
-					</div>\
-					<hr>'
+				var ticketEle = document.createElement('div')
+				ticketEle.classList.add('ticket')
+				ticketEle.id = ticket.id
+
+				var copiedSpanEle = document.createElement('span')
+				copiedSpanEle.classList.add('copied')
+				copiedSpanEle.textContent = 'Copied link!'
+				copiedSpanEle.setAttribute('hidden', true)
+
+				var ticketIdEle = document.createElement('div')
+				ticketIdEle.classList.add('id')
+				
+				var ticketIdSpanEle = document.createElement('span')
+				ticketIdSpanEle.textContent = 'ID: ' + ticket.id
+
+				var ticketNameEle = document.createElement('div')
+				ticketNameEle.classList.add('name')
+				ticketNameEle.textContent = 'Ticket Title: ' + ticket.name
+
+				var ticketWorkTimeEle = document.createElement('div')
+				ticketWorkTimeEle.classList.add('time')
+				ticketWorkTimeEle.textContent = 'Work Time: ' + formatSeconds(ticket.work_time)
+
+				ticketIdEle.appendChild(ticketIdSpanEle)
+				ticketEle.appendChild(ticketIdEle)
+
+				if (ticket.parent.id != "") {
+					var ticketParentEle = document.createElement('div')
+
+					var ticketParentSpanEle = document.createElement('span')
+					ticketParentSpanEle.textContent = 'Parent: ' + ticket.parent.id
+
+					ticketParentEle.appendChild(ticketParentSpanEle)
+
+					ticketEle.appendChild(ticketParentEle)
+				}
+
+				ticketEle.appendChild(ticketNameEle)
+				ticketEle.appendChild(ticketWorkTimeEle)
+				ticketEle.appendChild(copiedSpanEle)
+
+				ticketEle.addEventListener('click', function() {
+					fadeOut(copiedSpanEle)
+					window.navigator.clipboard.writeText(ticket.link)
+				})
+
+				ticketEle.addEventListener('mousemove', function(e) {
+					copiedSpanEle.style.top = (e.clientY + 5) + 'px'
+					copiedSpanEle.style.left = (e.clientX + 15) + 'px'
+				})
+
+				ticketsEle.appendChild(ticketEle)
+
+				if(state.length-1 > index) {
+					ticketsEle.insertAdjacentHTML('beforeend', `<hr/>`)
+				}
+
+
+				// ticketsEle.innerHTML += ' \
+				// 	<div id="' + ticket.id + '" class="ticket" onclick=""> \
+				// 		<span class="copied" hidden="true">Link copied!</span> \
+				// 		<div class="id"><span href="' + ticket.link + '" target="_blank">ID: ' + ticket.id + '</span></div> \
+				// 		' + (ticket.parent.id != "" ? '<div class="parent"><span href="' + ticket.parent.link + ' target="_blank"> Parent: ' + ticket.parent.id + '</span></div>' : '') + ' \
+				// 		<div class="name">Ticket Title: ' + ticket.name + '</div> \
+				// 		<div class="time">Ticket Work Time: ' + formatSeconds(ticket.work_time) + '</div> \
+				// 	</div> \
+				// 	<hr>'
 			})
 		} else {
 			ticketsEle.innerHTML += "<hr><div>You don't have any logged hours!</div>"

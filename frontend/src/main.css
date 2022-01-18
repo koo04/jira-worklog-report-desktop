@@ -109,6 +109,7 @@ hr {
 .main > .tickets > .ticket {
   width: 100%;
   padding: 10px;
+  cursor: pointer;
 }
 
 .lds-ring {
@@ -151,4 +152,9 @@ hr {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.ticket .copied {
+  position: absolute;
+  right: 1rem;
 }
