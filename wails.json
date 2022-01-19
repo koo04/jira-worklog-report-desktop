@@ -1,0 +1,20 @@
+{
+  "name": "jira-worklog-report-desktop",
+  "frontend:build": "",
+  "frontend:install": "",
+  "frontend:dev": "",
+  "wailsjsdir": "./frontend",
+  "version": "2",
+  "Path": "",
+  "BuildDir": "",
+  "outputfilename": "jwrd.exe",
+  "OutputType": "",
+  "Platform": "",
+  "Author": {
+    "name": "Douglas DeVicariis",
+    "email": "kootg04@gmail.com"
+  },
+  "debounceMS": 100,
+  "devserverurl": "http://localhost:34115",
+  "appargs": ""
+}

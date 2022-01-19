@@ -1,39 +1,69 @@
 package main
 
 import (
-	_ "embed"
+	"embed"
+	"log"
 
-	"github.com/atotto/clipboard"
-	"github.com/wailsapp/wails"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
+
+	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/logger"
+	"github.com/wailsapp/wails/v2/pkg/options"
+	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
-//go:embed frontend/build/main.js
-var js string
+//go:embed frontend/src
+var assets embed.FS
 
-//go:embed frontend/build/main.css
-var css string
-
-func copyURL(url string) error {
-	err := clipboard.WriteAll(url)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
+//go:embed build/appicon.png
+var icon []byte
 
 func main() {
+	// Create an instance of the app structure
+	app := NewApp()
 
-	app := wails.CreateApp(&wails.AppConfig{
-		Width:  1024,
-		Height: 768,
-		Title:  "Jira Worklog Report Desktop",
-		JS:     js,
-		CSS:    css,
-		Colour: "#131313",
+	// Create application with options
+	err := wails.Run(&options.App{
+		Title:             "jwrd",
+		Width:             720,
+		Height:            570,
+		MinWidth:          720,
+		MinHeight:         570,
+		MaxWidth:          1280,
+		MaxHeight:         740,
+		DisableResize:     false,
+		Fullscreen:        false,
+		Frameless:         false,
+		StartHidden:       false,
+		HideWindowOnClose: false,
+		RGBA:              &options.RGBA{R: 33, G: 37, B: 43, A: 255},
+		Assets:            assets,
+		LogLevel:          logger.DEBUG,
+		OnStartup:         app.startup,
+		OnDomReady:        app.domReady,
+		OnShutdown:        app.shutdown,
+		Bind: []interface{}{
+			app,
+		},
+		// Windows platform specific options
+		Windows: &windows.Options{
+			WebviewIsTransparent: false,
+			WindowIsTranslucent:  false,
+			DisableWindowIcon:    false,
+		},
+		Mac: &mac.Options{
+			TitleBar:             mac.TitleBarHiddenInset(),
+			WebviewIsTransparent: true,
+			WindowIsTranslucent:  true,
+			About: &mac.AboutInfo{
+				Title:   "Vanilla Template",
+				Message: "Part of the Wails projects",
+				Icon:    icon,
+			},
+		},
 	})
-	app.Bind(&Login{})
-	app.Bind(&Tickets{})
-	app.Bind(copyURL)
-	app.Run()
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
