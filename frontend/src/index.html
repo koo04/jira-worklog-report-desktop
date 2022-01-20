@@ -5,12 +5,36 @@
   <link rel="stylesheet" href="/main.css">
 </head>
 
-<body data-wails-drag>
-  <div class="logo"></div>
-  <div class="result" id="result">Please enter your name below 👇</div>
-  <div class="input-box" id="input" data-wails-no-drag>
-    <input class="input" id="name" type="text" autocomplete="off">
-    <button class="btn" onclick="greet()">Greet</button>
+<body data-wails-no-drag>
+  <div class="login">
+    <div class="form">
+      <form class="login-form">
+        <input type="text" name="url" placeholder="Jira URL"/>
+        <input type="email" name="email" placeholder="Jira Email"/>
+        <input type="password" name="key" placeholder="API Key"/>
+        <button>login</button>
+      </form> 
+    </div> 
+  </div>
+  <div class="loading lds-ring" hidden="true"><div></div><div></div><div></div><div></div></div>
+  <div class="main" hidden=true> 
+    <div class="set-time">
+      <div class="set" data-value=0>Today</div>
+      <div class="set" data-value=1>This Week</div>
+      <div class="set" data-value=2>Last Week</div>
+      <div class="set" data-value=3>This Month</div>
+      <div class="set" data-value=4>Last Month</div>
+      <div class="set" data-value=5>This Quarter</div>
+      <div class="set" data-value=6>Last Quarter</div>
+    </div>
+    <div class="header">
+      <div class="total-time">
+        Total Time: <span>0</span>
+      </div>
+      <hr>
+    </div>
+    <div class="tickets">
+    </div>
   </div>
 
   <script src="/main.js"></script>

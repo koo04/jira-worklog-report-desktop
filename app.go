@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+
+	"github.com/atotto/clipboard"
 )
 
 // App struct
@@ -34,4 +36,15 @@ func (b *App) shutdown(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (b *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+func (b *App) CopyText(s string) error {
+	log.Debug(fmt.Sprintf("Copying text to clipboard: %s", s))
+
+	err := clipboard.WriteAll(s)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

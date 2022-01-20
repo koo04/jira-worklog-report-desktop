@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"log"
 
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 
@@ -18,9 +17,12 @@ var assets embed.FS
 //go:embed build/appicon.png
 var icon []byte
 
+var log = logger.NewDefaultLogger()
+
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
+	user := NewUser()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -44,6 +46,7 @@ func main() {
 		OnShutdown:        app.shutdown,
 		Bind: []interface{}{
 			app,
+			user,
 		},
 		// Windows platform specific options
 		Windows: &windows.Options{
@@ -64,6 +67,6 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 }
