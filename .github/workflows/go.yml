@@ -45,7 +45,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.16
+        go-version: 1.18
         
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.2.0
@@ -78,7 +78,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.16
+        go-version: 1.18
         
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.2.0
