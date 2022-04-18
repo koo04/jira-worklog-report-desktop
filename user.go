@@ -205,25 +205,25 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 		switch timeSet {
 		case 0:
 			// Today
-			jql = "assignee=currentuser() AND (worklogDate >= startOfDay() and worklogDate <= endOfDay())"
+			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfDay() and worklogDate <= endOfDay())"
 		case 1:
 			// This week
-			jql = "assignee=currentuser() AND (worklogDate >= startOfWeek() and worklogDate <= endOfWeek())"
+			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfWeek() and worklogDate <= endOfWeek())"
 		case 2:
 			// Last week
-			jql = "assignee=currentuser() AND (worklogDate >= startOfWeek('-1') and worklogDate <= endOfWeek('+1'))"
+			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfWeek('-1') and worklogDate <= endOfWeek('+1'))"
 		case 3:
 			// This month
-			jql = "assignee=currentuser() AND (worklogDate >= startOfMonth() and worklogDate <= endOfMonth())"
+			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfMonth() and worklogDate <= endOfMonth())"
 		case 4:
 			// Last month
-			jql = "assignee=currentuser() AND (worklogDate >= startOfMonth('-1') and worklogDate <= endOfMonth('-1'))"
+			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfMonth('-1') and worklogDate <= endOfMonth('-1'))"
 		case 5:
 			// This Quarter
 			quarter := (int(m)-1)/3 + 1
 			startOfQuarter := time.Date(y, time.Month((quarter-1)*3+1), 1, 0, 0, 0, 0, time.Local)
 			endOfQuarter := startOfQuarter.AddDate(0, 4, -1)
-			jql = fmt.Sprintf("assignee=currentuser() AND (worklogDate >= \"%s\" and worklogDate <= \"%s\")", startOfQuarter.Format("2006/01/02"), endOfQuarter.Format("2006/01/02"))
+			jql = fmt.Sprintf("(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= \"%s\" and worklogDate <= \"%s\")", startOfQuarter.Format("2006/01/02"), endOfQuarter.Format("2006/01/02"))
 		case 6:
 			// Last Quarter
 			quarter := (int(m-3)-1)/3 + 1
@@ -232,7 +232,7 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 			log.Debug(fmt.Sprintf("Start of quarter: %s", startOfQuarter.Format("2006/01/02")))
 			endOfQuarter := startOfQuarter.AddDate(0, quarter*3, -1)
 			log.Debug(fmt.Sprintf("End of quarter: %s", endOfQuarter.Format("2006/01/02")))
-			jql = fmt.Sprintf("assignee=currentuser() AND (worklogDate >= \"%s\" and worklogDate <= \"%s\")", startOfQuarter.Format("2006/01/02"), endOfQuarter.Format("2006/01/02"))
+			jql = fmt.Sprintf("(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= \"%s\" and worklogDate <= \"%s\")", startOfQuarter.Format("2006/01/02"), endOfQuarter.Format("2006/01/02"))
 		}
 
 		log.Debug(fmt.Sprintf("JQL: %s", jql))
