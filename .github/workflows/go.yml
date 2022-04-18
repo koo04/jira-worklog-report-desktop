@@ -50,9 +50,6 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.2.0
       
-    - name: Go mod tidy
-      run: go mod tidy
-      
     - name: Install wails
       run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       
@@ -82,9 +79,6 @@ jobs:
         
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.2.0
-      
-    - name: Go mod tidy
-      run: go mod tidy
       
     - name: Install wails
       run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
