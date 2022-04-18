@@ -32,7 +32,7 @@ const go = {
       /**
        * GetTickets
        * @param {number} arg1 - Go Type: int
-       * @returns {Promise<Array<Ticket>|Error>}  - Go Type: []main.Ticket
+       * @returns {Promise<Array<models.Ticket>|Error>}  - Go Type: []main.Ticket
        */
       "GetTickets": (arg1) => {
         return window.go.main.User.GetTickets(arg1);

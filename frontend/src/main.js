@@ -33,6 +33,7 @@ var urlEle = document.querySelector('input[name="url"]')
 var mainEle = document.querySelector('.main')
 var selectTimeEle = document.querySelectorAll('.main > .set-time > .set')
 var totalTimeEle = document.querySelector('.main > .header > .total-time > span')
+var totalTicketsEle = document.querySelector('.main > .header > .total-tickets > span')
 var ticketsEle = document.querySelector('.main > .tickets')
 
 var noTicketsEle = document.createElement('div')
@@ -76,50 +77,52 @@ selectTimeEle.forEach(function(e) {
                 return
             }
 
+            totalTicketsEle.textContent = tickets.length
+
             ticketsEle.innerHTML = ""
-    
+
             if (tickets.length > 0) {
                 tickets.forEach(function(ticket, index) {
                     totalWorkTime += ticket.work_time
                     totalTimeEle.textContent = formatSeconds(totalWorkTime)
-    
+
                     var ticketEle = document.createElement('div')
                     ticketEle.classList.add('ticket')
                     ticketEle.id = ticket.id
-    
+
                     var copiedSpanEle = document.createElement('span')
                     copiedSpanEle.classList.add('copied')
                     copiedSpanEle.textContent = 'Copied link!'
                     copiedSpanEle.setAttribute('hidden', true)
-    
+
                     var ticketIdEle = document.createElement('div')
                     ticketIdEle.classList.add('id')
                     
                     var ticketIdSpanEle = document.createElement('span')
                     ticketIdSpanEle.textContent = 'ID: ' + ticket.id
-    
+
                     var ticketNameEle = document.createElement('div')
                     ticketNameEle.classList.add('name')
                     ticketNameEle.textContent = 'Ticket Title: ' + ticket.name
-    
+
                     var ticketWorkTimeEle = document.createElement('div')
                     ticketWorkTimeEle.classList.add('time')
                     ticketWorkTimeEle.textContent = 'Work Time: ' + formatSeconds(ticket.work_time)
-    
+
                     ticketIdEle.appendChild(ticketIdSpanEle)
                     ticketEle.appendChild(ticketIdEle)
-    
+
                     if (ticket.parent.id != "") {
                         var ticketParentEle = document.createElement('div')
-    
+
                         var ticketParentSpanEle = document.createElement('span')
                         ticketParentSpanEle.textContent = 'Parent: ' + ticket.parent.id
-    
+
                         ticketParentEle.appendChild(ticketParentSpanEle)
-    
+
                         ticketEle.appendChild(ticketParentEle)
                     }
-    
+
                     ticketEle.appendChild(ticketNameEle)
                     ticketEle.appendChild(ticketWorkTimeEle)
                     ticketEle.appendChild(copiedSpanEle)

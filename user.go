@@ -227,8 +227,11 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 		case 6:
 			// Last Quarter
 			quarter := (int(m-3)-1)/3 + 1
+			log.Debug(fmt.Sprintf("Quarter: %d", quarter))
 			startOfQuarter := time.Date(y, time.Month((quarter-1)*3+1), 1, 0, 0, 0, 0, time.Local)
-			endOfQuarter := startOfQuarter.AddDate(0, 4, -1)
+			log.Debug(fmt.Sprintf("Start of quarter: %s", startOfQuarter.Format("2006/01/02")))
+			endOfQuarter := startOfQuarter.AddDate(0, quarter*3, -1)
+			log.Debug(fmt.Sprintf("End of quarter: %s", endOfQuarter.Format("2006/01/02")))
 			jql = fmt.Sprintf("assignee=currentuser() AND (worklogDate >= \"%s\" and worklogDate <= \"%s\")", startOfQuarter.Format("2006/01/02"), endOfQuarter.Format("2006/01/02"))
 		}
 
