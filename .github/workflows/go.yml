@@ -54,7 +54,7 @@ jobs:
       run: go mod tidy
       
     - name: Install wails
-      run: go get -u github.com/wailsapp/wails/cmd/wails
+      run: go get -u github.com/wailsapp/wails/v2/cmd/wails
       
     - name: Build
       run: wails build -f
@@ -87,7 +87,7 @@ jobs:
       run: go mod tidy
       
     - name: Install wails
-      run: go get -u github.com/wailsapp/wails/cmd/wails
+      run: go get -u github.com/wailsapp/wails/v2/cmd/wails
       
     - name: Build
       run: wails build -f
