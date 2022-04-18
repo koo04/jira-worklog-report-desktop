@@ -62,7 +62,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ needs.build-linux.outputs.url }}
-        asset_path: ./build/jwrd.exe
+        asset_path: ./build/bin/jwrd.exe
         asset_name: jwrd-windows-amd64.exe
         asset_content_type: vnd.microsoft.portable-executable
 
@@ -92,6 +92,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ needs.build-linux.outputs.url }}
-        asset_path: ./build/jwrd
+        asset_path: ./build/bin/jwrd
         asset_name: jwrd-mac-amd64
         asset_content_type: applefile
