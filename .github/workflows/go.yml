@@ -84,7 +84,7 @@ jobs:
       run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       
     - name: Build
-      run: wails build -f
+      run: wails build -f -o ./build/bin/jwrd
 
     - name: upload artifacts
       uses: actions/upload-release-asset@v1
