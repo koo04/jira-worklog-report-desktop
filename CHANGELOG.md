@@ -1,4 +1,11 @@
 # Changelog
+## [v0.1.0-alpha.01] - 2022-04-18
+### Updated
+- Wails
+### Fixed
+- `Last Quarter` not using the correct end date
+### Added
+- `Total Tickets` to the UI
 ## [v0.0.1-alpha.08] - 2022-01-18
 ### Fixed
 - `Copied Link` text foating in the wrong position after scrolling
