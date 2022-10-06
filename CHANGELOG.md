@@ -3,9 +3,11 @@
 ### Updated
 - go version
 - wails version
+---
 ## [v0.1.0-alpha.02] - 2022-10-06
 ### Updated
 - Just show hours, not days
+---
 ## [v0.1.0-alpha.01] - 2022-04-18
 ### Updated
 - Wails
