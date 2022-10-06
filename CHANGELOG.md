@@ -1,4 +1,8 @@
 # Changelog
+## [v0.1.0-alpha.03] - 2022-10-06
+### Updated
+- go version
+- wails version
 ## [v0.1.0-alpha.02] - 2022-10-06
 ### Updated
 - Just show hours, not days
