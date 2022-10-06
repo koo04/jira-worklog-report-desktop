@@ -1,12 +1,12 @@
 function formatSeconds(seconds) {
     if (seconds > 0) {
-        var days = Math.floor(seconds / 86400)
-        seconds -= days * 86400
+        // var days = Math.floor(seconds / 86400)
+        // seconds -= days * 86400
         var hours = Math.floor(seconds / 3600)
         seconds -= hours * 3600
         var minutes = Math.floor(seconds / 60)
         seconds -= minutes * 60
-        return (days != 0 ? days + " Days " : "") + (hours != 0 ? hours + " Hours " : "") + (minutes != 0 ? (minutes < 10 ? "0" + minutes + " Minutes " : minutes + " Minutes ") : "")
+        return (hours != 0 ? hours + " Hours " : "") + (minutes != 0 ? (minutes < 10 ? "0" + minutes + " Minutes " : minutes + " Minutes ") : "")
     }
 
     return 0
