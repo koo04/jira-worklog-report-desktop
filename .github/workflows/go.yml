@@ -92,6 +92,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ needs.build-linux.outputs.url }}
-        asset_path: ./build/bin/jwrd
+        asset_path: ./build/bin/jira-worklog-report-desktop.app/Contents/MacOS/jira-worklog-report-desktop
         asset_name: jwrd-mac-amd64
         asset_content_type: applefile
