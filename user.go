@@ -198,43 +198,54 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 	log.Debug(fmt.Sprintf("Time set: %d", timeSet))
 
 	if timeSet != lastTimeSet {
-		jql := ""
+		jql := "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= %s and worklogDate <= %s)"
 		now := time.Now()
-		y, m, _ := now.Date()
+		y, m, d := now.Date()
+		var s time.Time
+		var e time.Time
 
 		switch timeSet {
 		case 0:
 			// Today
-			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfDay() and worklogDate <= endOfDay())"
+			s = time.Date(y, m, d, 0, 0, 0, 0, time.Local)
+			e = time.Date(y, m, d, 23, 59, 59, 0, time.Local)
 		case 1:
 			// This week
-			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfWeek() and worklogDate <= endOfWeek())"
+			for now.Weekday() != time.Monday {
+				now = now.AddDate(0, 0, -1)
+			}
+			s = now
+			e = now.AddDate(0, 0, +4)
 		case 2:
 			// Last week
-			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfWeek('-1') and worklogDate <= endOfWeek('+1'))"
+			now = now.AddDate(0, 0, -7)
+			for now.Weekday() != time.Monday {
+				now = now.AddDate(0, 0, -1)
+			}
+			s = now
+			e = now.AddDate(0, 0, +4)
 		case 3:
 			// This month
-			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfMonth() and worklogDate <= endOfMonth())"
+			s = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.Local)
+			e = s.AddDate(0, 1, 0).Add(-time.Second)
 		case 4:
 			// Last month
-			jql = "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= startOfMonth('-1') and worklogDate <= endOfMonth('-1'))"
+			now = now.AddDate(0, -1, 0)
+			s = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.Local)
+			e = s.AddDate(0, 1, 0).Add(-time.Second)
 		case 5:
 			// This Quarter
 			quarter := (int(m)-1)/3 + 1
-			startOfQuarter := time.Date(y, time.Month((quarter-1)*3+1), 1, 0, 0, 0, 0, time.Local)
-			endOfQuarter := startOfQuarter.AddDate(0, 4, -1)
-			jql = fmt.Sprintf("(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= \"%s\" and worklogDate <= \"%s\")", startOfQuarter.Format("2006/01/02"), endOfQuarter.Format("2006/01/02"))
+			s = time.Date(y, time.Month((quarter-1)*3+1), 1, 0, 0, 0, 0, time.Local)
+			e = s.AddDate(0, 3, -1)
 		case 6:
 			// Last Quarter
 			quarter := (int(m-3)-1)/3 + 1
-			log.Debug(fmt.Sprintf("Quarter: %d", quarter))
-			startOfQuarter := time.Date(y, time.Month((quarter-1)*3+1), 1, 0, 0, 0, 0, time.Local)
-			log.Debug(fmt.Sprintf("Start of quarter: %s", startOfQuarter.Format("2006/01/02")))
-			endOfQuarter := startOfQuarter.AddDate(0, quarter*3, -1)
-			log.Debug(fmt.Sprintf("End of quarter: %s", endOfQuarter.Format("2006/01/02")))
-			jql = fmt.Sprintf("(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= \"%s\" and worklogDate <= \"%s\")", startOfQuarter.Format("2006/01/02"), endOfQuarter.Format("2006/01/02"))
+			s = time.Date(y, time.Month((quarter-1)*3+1), 1, 0, 0, 0, 0, time.Local)
+			e = s.AddDate(0, 3, -1)
 		}
 
+		jql = fmt.Sprintf(jql, s.Format(`"2006/01/02"`), e.Format(`"2006/01/02"`))
 		log.Debug(fmt.Sprintf("JQL: %s", jql))
 
 		tickets := []Ticket{}
@@ -255,28 +266,27 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 					}
 
 					for _, worklog := range wl.Worklogs {
-						totalTime += worklog.TimeSpentSeconds
+						worklogTime := time.Time(*worklog.Started)
+						if worklogTime.After(s) && worklogTime.Before(e) {
+							totalTime += worklog.TimeSpentSeconds
+						}
+					}
+
+					t := Ticket{
+						Id:       i.Key,
+						Name:     i.Fields.Summary,
+						Link:     fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Key),
+						WorkTime: totalTime,
 					}
 
 					if i.Fields.Parent != nil {
-						tickets = append(tickets, Ticket{
-							Id:       i.Key,
-							Name:     i.Fields.Summary,
-							Link:     fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Key),
-							WorkTime: totalTime,
-							Parent: Parent{
-								Id:   i.Fields.Parent.Key,
-								Link: fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Fields.Parent.Key),
-							},
-						})
-					} else {
-						tickets = append(tickets, Ticket{
-							Id:       i.Key,
-							Name:     i.Fields.Summary,
-							Link:     fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Key),
-							WorkTime: totalTime,
-						})
+						t.Parent = Parent{
+							Id:   i.Fields.Parent.Key,
+							Link: fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Fields.Parent.Key),
+						}
 					}
+
+					tickets = append(tickets, t)
 
 					return nil
 				})
