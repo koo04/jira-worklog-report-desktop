@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.1.1-alpha.02] - 2022-10-10
+
+### Fixed
+
+- Various issues
+
+---
+
 ## [v0.1.1-alpha.01] - 2022-10-10
 
 ### Updated
