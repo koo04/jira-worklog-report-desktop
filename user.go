@@ -198,7 +198,7 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 	log.Debug(fmt.Sprintf("Time set: %d", timeSet))
 
 	if timeSet != lastTimeSet {
-		jql := "(assignee=currentuser() OR worklogAuthor=currentUser()) AND (worklogDate >= %s and worklogDate <= %s)"
+		jql := "(assignee=currentuser() OR worklogAuthor=currentUser()) AND ((worklogDate >= %s and worklogDate <= %s) OR (status = CLOSED AND timespent = 0))"
 		now := time.Now()
 		y, m, d := now.Date()
 		var s time.Time
