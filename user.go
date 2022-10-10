@@ -198,7 +198,7 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 	log.Debug(fmt.Sprintf("Time set: %d", timeSet))
 
 	if timeSet != lastTimeSet {
-		jql := "(assignee=currentuser() OR worklogAuthor=currentUser()) AND ((worklogDate >= %s and worklogDate <= %s) OR (status = CLOSED AND timespent = 0))"
+		jql := "(assignee=currentuser() OR worklogAuthor=currentUser()) AND ((worklogDate >= %s and worklogDate <= %s) OR timespent = 0)"
 		now := time.Now()
 		y, m, d := now.Date()
 		var s time.Time
@@ -211,6 +211,7 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 			e = time.Date(y, m, d, 23, 59, 59, 0, time.Local)
 		case 1:
 			// This week
+			now = time.Date(y, m, d, 0, 0, 0, 0, time.Local)
 			for now.Weekday() != time.Monday {
 				now = now.AddDate(0, 0, -1)
 			}
@@ -218,12 +219,12 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 			e = now.AddDate(0, 0, +4)
 		case 2:
 			// Last week
-			now = now.AddDate(0, 0, -7)
+			now = time.Date(y, m, d-7, 0, 0, 0, 0, time.Local)
 			for now.Weekday() != time.Monday {
 				now = now.AddDate(0, 0, -1)
 			}
 			s = now
-			e = now.AddDate(0, 0, +4)
+			e = now.AddDate(0, 0, +4).Add(+59 * time.Second).Add(+59 * time.Minute).Add(+23 * time.Hour)
 		case 3:
 			// This month
 			s = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.Local)
@@ -257,36 +258,38 @@ func (u *User) GetTickets(timeSet int) ([]Ticket, error) {
 			defer wg.Done()
 			err := u.Client.Issue.SearchPages(jql, &jira.SearchOptions{},
 				func(i jira.Issue) error {
-					totalTime := 0
+					rd := time.Time(i.Fields.Resolutiondate).In(time.Local)
+					if (rd.After(s) && rd.Before(e)) || rd.Equal(time.Time{}) {
+						totalTime := 0
 
-					wl, _, err := u.Client.Issue.GetWorklogs(i.ID)
-					if err != nil {
-						fmt.Println(err)
-						return err
-					}
-
-					for _, worklog := range wl.Worklogs {
-						worklogTime := time.Time(*worklog.Started)
-						if worklogTime.After(s) && worklogTime.Before(e) {
-							totalTime += worklog.TimeSpentSeconds
+						wl, _, err := u.Client.Issue.GetWorklogs(i.ID)
+						if err != nil {
+							return err
 						}
-					}
 
-					t := Ticket{
-						Id:       i.Key,
-						Name:     i.Fields.Summary,
-						Link:     fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Key),
-						WorkTime: totalTime,
-					}
-
-					if i.Fields.Parent != nil {
-						t.Parent = Parent{
-							Id:   i.Fields.Parent.Key,
-							Link: fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Fields.Parent.Key),
+						for _, worklog := range wl.Worklogs {
+							worklogTime := time.Time(*worklog.Started).In(time.Local)
+							if worklogTime.After(s) && worklogTime.Before(e) {
+								totalTime += worklog.TimeSpentSeconds
+							}
 						}
-					}
 
-					tickets = append(tickets, t)
+						t := Ticket{
+							Id:       i.Key,
+							Name:     i.Fields.Summary,
+							Link:     fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Key),
+							WorkTime: totalTime,
+						}
+
+						if i.Fields.Parent != nil {
+							t.Parent = Parent{
+								Id:   i.Fields.Parent.Key,
+								Link: fmt.Sprintf("https://cakemarketing.atlassian.net/browse/%s", i.Fields.Parent.Key),
+							}
+						}
+
+						tickets = append(tickets, t)
+					}
 
 					return nil
 				})
